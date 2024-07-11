@@ -19,7 +19,8 @@ def get_prod_repo(session: Session = Depends(get_db)):
 #     return service.create(request)
 
 @product_router.post('/', status_code=201, description='Criar um novo produto', response_model=ProdutoDTO)
-async def create(request: ProdutoCreateDTO, service: ProductService = Depends(get_product_service), authorization: str = Header(alias='Authorization')):
+async def create(request: ProdutoCreateDTO, service: ProductService = Depends(get_product_service), authorization: str = Depends(get_product_service)):
+    auth_service.validate_token(authorization)
     produto_service = ProductService(service)
     return produto_service.create(request)
 
@@ -28,7 +29,8 @@ async def create(request: ProdutoCreateDTO, service: ProductService = Depends(ge
 #     return service.find_by_id(user_id=user_id)
 
 @product_router.get('/{user_id}', status_code=200, description='Buscar produto por ID', response_model=ProdutoDTO)
-async def find_by_id(user_id: int, service: ProductService = Depends(get_product_service), authorization: str = Header(alias='Authorization')):
+async def find_by_id(user_id: int, service: ProductService = Depends(get_product_service), authorization: str = Depends(get_product_service)):
+    auth_service.validate_token(authorization)
     produto_service = ProductService(service)
     return produto_service.read(user_id=user_id)
 
@@ -37,7 +39,8 @@ async def find_by_id(user_id: int, service: ProductService = Depends(get_product
 #     return service.find_all()
 
 @product_router.get('/', status_code=200, description='Buscar todos os produtos', response_model=list[ProdutoDTO])
-async def find_all(service: ProductService = Depends(get_product_service), authorization: str = Header(alias='Authorization')):
+async def find_all(service: ProductService = Depends(get_product_service), authorization: str = Depends(get_product_service)):
+    auth_service.validate_token(authorization)
     produto_service = ProductService(service)
     return produto_service.find_all()
 
@@ -46,7 +49,8 @@ async def find_all(service: ProductService = Depends(get_product_service), autho
 #     return service.update(user_id, user_data)
 
 @product_router.put('/{user_id}', status_code=200, description='Atualizar um produto', response_model=ProdutoDTO)
-async def update(user_id: int, user_data: ProdutoUpdateDTO, service: ProductService = Depends(get_product_service), authorization: str = Header(alias='Authorization')):
+async def update(user_id: int, user_data: ProdutoUpdateDTO, service: ProductService = Depends(get_product_service), authorization: str = Depends(get_product_service)):
+    auth_service.validate_token(authorization)
     produto_service = ProductService(service)
     return produto_service.update(user_id, user_data)
 
@@ -55,6 +59,7 @@ async def update(user_id: int, user_data: ProdutoUpdateDTO, service: ProductServ
 #     service.delete(user_id=user_id)
 
 @product_router.delete('/{user_id}', status_code=204, description='Deletar um produto')
-async def delete(user_id: int, service: ProductService = Depends(get_product_service), authorization: str = Header(alias='Authorization')):
+async def delete(user_id: int, service: ProductService = Depends(get_product_service), authorization: str = Depends(get_product_service)):
+    auth_service.validate_token(authorization)
     produto_service = ProductService(service)
     produto_service.delete(user_id=user_id)
