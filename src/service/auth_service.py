@@ -9,7 +9,7 @@ from src.domain.dto.dtos import TokenResponse, UserTokenDataResponse
 
 class AuthService:
 
-    def create_access_token(self, secret_key: str):
+    def create_access_token(self, secret_key: str) -> TokenResponse:
         self.validate_secret(secret_key)
         access_token_expires = timedelta(seconds=settings.TOKEN_EXPIRE_SECONDS)
         expires_at = datetime.utcnow() + access_token_expires
